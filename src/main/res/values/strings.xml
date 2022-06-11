@@ -2,4 +2,10 @@
     <string name="app_name">Github User</string>
     <string name="version">Version 1.1</string>
     <string name="icon_decription">Github Icon</string>
+    <string name="heading_famous_users">Famous Users</string>
+    <string name="search_placeholder">type username</string>
+    <string name="avatar_description">User Avatar</string>
+    <string name="followers_heading">Followers</string>
+    <string name="following_heading">Following</string>
+    <string name="repo_heading">Repositories</string>
 </resources>
