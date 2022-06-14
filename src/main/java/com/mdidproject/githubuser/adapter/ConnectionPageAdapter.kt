@@ -10,7 +10,7 @@ class ConnectionPageAdapter(activity: AppCompatActivity, private val username: S
     override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {
-        var fragment: Fragment? = when (position) {
+        val fragment: Fragment? = when (position) {
             0 -> FollowersFragment(username)
             1 -> FollowingFragment(username)
             else -> null

@@ -1,5 +1,6 @@
+package com.mdidproject.githubuser.response
+
 import com.google.gson.annotations.SerializedName
-import com.mdidproject.githubuser.response.UserItem
 
 data class UserListResponse(
 

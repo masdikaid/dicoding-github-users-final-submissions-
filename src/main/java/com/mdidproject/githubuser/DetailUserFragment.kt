@@ -33,7 +33,7 @@ class DetailUserFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentDetailUserBinding.inflate(inflater, container, false)
         (activity as AppCompatActivity).supportActionBar?.hide()
         return binding.root

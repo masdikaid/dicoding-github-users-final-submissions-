@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mdidproject.githubuser.adapter.UserListAdapter
 import com.mdidproject.githubuser.databinding.FragmentSearchUserBinding
@@ -31,7 +30,7 @@ class SearchUserFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentSearchUserBinding.inflate(inflater, container, false)
         (activity as AppCompatActivity).supportActionBar?.hide()
         rvAdapter = UserListAdapter(userList)

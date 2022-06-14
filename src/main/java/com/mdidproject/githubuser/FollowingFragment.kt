@@ -26,7 +26,7 @@ class FollowingFragment(private val username: String) : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFollowingBinding.inflate(inflater, container,false)
         rvAdapter = UserListAdapter(userList)
         binding.apply {
@@ -46,6 +46,11 @@ class FollowingFragment(private val username: String) : Fragment() {
         }
         viewModel.following.observe(viewLifecycleOwner) { data ->
             showList(data)
+        }
+        viewModel.isError.observe(viewLifecycleOwner){
+            if(it){
+                Toast.makeText(activity, "${viewModel.errorMessage}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

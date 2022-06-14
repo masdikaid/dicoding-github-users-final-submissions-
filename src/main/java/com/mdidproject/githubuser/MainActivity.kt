@@ -25,14 +25,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId){
+        return when (item.itemId){
             R.id.search_menu -> {
                 Log.i("Search-Button", "Clicked")
                 val action = FamousUserFragmentDirections.actionFamousUserFragmentToSearchUserFragment()
                 binding.fragmentContainerView.findNavController().navigate(action)
-                return true
+                true
             }
-            else -> return true
+            else -> true
         }
     }
 }

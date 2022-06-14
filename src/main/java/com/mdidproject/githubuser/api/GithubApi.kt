@@ -1,9 +1,9 @@
 package com.mdidproject.githubuser.api
 
-import UserListResponse
 import androidx.viewbinding.BuildConfig
 import com.mdidproject.githubuser.interfaces.ApiServices
 import com.mdidproject.githubuser.response.UserItem
+import com.mdidproject.githubuser.response.UserListResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -30,7 +30,7 @@ class GithubApi {
         }
 
         fun getFamousUsers(): UserListResponse {
-            val userItem = listOf<UserItem>(
+            val userItem = listOf(
                 UserItem("https://avatars.githubusercontent.com/u/66577?v=4", "JakeWharton"),
                 UserItem("https://avatars.githubusercontent.com/u/9877145?v=4", "amitshekhariitbhu"),
                 UserItem("https://avatars.githubusercontent.com/u/869684?v=4", "romainguy"),

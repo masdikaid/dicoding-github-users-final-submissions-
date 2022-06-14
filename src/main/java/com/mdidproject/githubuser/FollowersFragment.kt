@@ -27,7 +27,7 @@ class FollowersFragment(private val username: String) : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFollowersBinding.inflate(inflater, container, false)
         rvAdapter = UserListAdapter(userList)
         binding.apply {
@@ -43,10 +43,14 @@ class FollowersFragment(private val username: String) : Fragment() {
         viewModel.getFollowers(username)
         viewModel.isLoading.observe(viewLifecycleOwner) {
             binding.pbFollowers.visibility = if (it) View.VISIBLE else View.INVISIBLE
-
         }
         viewModel.followers.observe(viewLifecycleOwner) { data ->
             showList(data)
+        }
+        viewModel.isError.observe(viewLifecycleOwner){
+            if(it){
+                Toast.makeText(activity, "${viewModel.errorMessage}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

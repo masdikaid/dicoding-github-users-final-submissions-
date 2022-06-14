@@ -1,12 +1,12 @@
 package com.mdidproject.githubuser.viewmodel
 
-import UserListResponse
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mdidproject.githubuser.api.GithubApi
 import com.mdidproject.githubuser.response.UserItem
+import com.mdidproject.githubuser.response.UserListResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

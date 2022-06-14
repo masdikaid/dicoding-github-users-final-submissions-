@@ -24,7 +24,7 @@ class FamousUserFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFamousUserBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -45,7 +45,7 @@ class FamousUserFragment : Fragment() {
         }
     }
 
-    fun showList(users: List<UserItem>){
+    private fun showList(users: List<UserItem>){
         val adapter = UserListAdapter(users)
         adapter.setAdapterItemCallback(object : ItemAdapterCallback<UserItem>{
             override fun onItemClicked(view: View?, data: UserItem) {
