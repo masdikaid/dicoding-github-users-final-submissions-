@@ -1,7 +1,6 @@
 package com.mdidproject.githubuser.interfaces
 
 import UserListResponse
-import com.mdidproject.githubuser.response.UserConnectionResponse
 import com.mdidproject.githubuser.response.UserItem
 import com.mdidproject.githubuser.response.UserResponse
 import retrofit2.Call
