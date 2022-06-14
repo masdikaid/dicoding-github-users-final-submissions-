@@ -31,7 +31,7 @@ class UserListAdapter(private val listUser: List<UserItem>): RecyclerView.Adapte
                 .circleCrop()
                 .into(ivListAvatar)
 
-            holder.itemView.setOnClickListener {itemCallback.onItemClicked(listUser[holder.adapterPosition])}
+            holder.itemView.setOnClickListener { view -> itemCallback.onItemClicked(view, listUser[holder.adapterPosition])}
         }
     }
 

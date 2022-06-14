@@ -14,11 +14,10 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:autofillHints=""
-        android:drawableEnd="@drawable/ic_baseline_search_20"
+        android:drawableEnd="@drawable/ic_baseline_search_20_black"
         android:ems="10"
         android:hint="@string/search_placeholder"
         android:inputType="textPersonName"
-        android:text="@string/search_placeholder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

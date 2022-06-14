@@ -19,10 +19,17 @@ open class UserListViewModel(type: String = FAMOUS): ViewModel() {
     private val _userList = MutableLiveData<List<UserItem>>()
     val userList: LiveData<List<UserItem>> = _userList
 
+    private val _isError = MutableLiveData<Boolean>()
+    val isError: LiveData<Boolean> = _isError
+
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
+
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
     init {
+        setNoError()
         if (type === FAMOUS){
             getFamouseUsers()
         }
@@ -31,6 +38,7 @@ open class UserListViewModel(type: String = FAMOUS): ViewModel() {
     private fun getFamouseUsers(){
         _userList.value = GithubApi.getFamousUsers().users
         _isLoading.value = false
+        setNoError()
     }
 
     fun searchUsers(username: String){
@@ -40,17 +48,29 @@ open class UserListViewModel(type: String = FAMOUS): ViewModel() {
             override fun onResponse(call: Call<UserListResponse>, response: Response<UserListResponse>) {
                 _isLoading.value = false
                 if (response.isSuccessful){
+                    setNoError()
                     _userList.value = response.body()?.users
                 }else{
-                    Log.e("Search Users", "onFailure: ${response.message()}")
+                    setError("Failed Loading Data")
+                    Log.e("Search Users", "failed: ${response.message()}")
                 }
             }
 
             override fun onFailure(call: Call<UserListResponse>, t: Throwable) {
-                _isLoading.value = false
+                setError("Failed Loading Data")
                 Log.e("Search Users", "onFailure: ${t.message.toString()}")
             }
 
         })
+    }
+
+    private fun setNoError(){
+        _isError.value = false
+        _errorMessage.value = ""
+    }
+
+    private fun setError(err: String){
+        _isError.value = true
+        _errorMessage.value = err
     }
 }
