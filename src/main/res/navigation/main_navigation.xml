@@ -15,24 +15,27 @@
             app:destination="@id/searchUserFragment" />
         <action
             android:id="@+id/action_famousUserFragment_to_detailUserActivity"
-            app:destination="@id/detailUserActivity" />
+            app:destination="@id/detailUserFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchUserFragment"
         android:name="com.mdidproject.githubuser.SearchUserFragment"
         android:label="fragment_search_user"
-        tools:layout="@layout/fragment_search_user" >
+        tools:layout="@layout/fragment_search_user">
         <action
             android:id="@+id/action_searchUserFragment_to_detailUserActivity"
-            app:destination="@id/detailUserActivity" />
+            app:destination="@id/detailUserFragment" />
     </fragment>
-    <activity
-        android:id="@+id/detailUserActivity"
-        android:name="com.mdidproject.githubuser.DetailUserActivity"
-        android:label="activity_detail_user"
-        tools:layout="@layout/activity_detail_user" >
+    <fragment
+        android:id="@+id/detailUserFragment"
+        android:name="com.mdidproject.githubuser.DetailUserFragment"
+        android:label="fragment_detail_user"
+        tools:layout="@layout/fragment_detail_user" >
+        <action
+            android:id="@+id/action_detailUserFragment_self"
+            app:destination="@id/detailUserFragment" />
         <argument
             android:name="username"
             app:argType="string" />
-    </activity>
+    </fragment>
 </navigation>
