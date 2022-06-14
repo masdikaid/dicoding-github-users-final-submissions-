@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailUserActivity">
+    tools:context=".DetailUserFragment">
 
     <ImageView
         android:id="@+id/iv_avatar"
@@ -17,8 +17,21 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
+    <ImageButton
+        android:id="@+id/ib_share"
+        android:layout_width="49dp"
+        android:layout_height="49dp"
+        android:backgroundTint="#FFFFFF"
+        android:src="@drawable/ic_baseline_share_20"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_name"
+        app:layout_constraintStart_toEndOf="@+id/tv_name"
+        app:layout_constraintTop_toTopOf="@+id/tv_name"
+        app:layout_constraintVertical_bias="0.658" />
+
     <TextView
         android:id="@+id/tv_name"
+        style="@style/Detail.Heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -28,20 +41,33 @@
         tools:text="Dika Adi Setiawan" />
 
     <TextView
+        android:id="@+id/tv_username"
+        style="@style/Detail.Username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name"
+        tools:text="masdikaid" />
+
+    <TextView
         android:id="@+id/tv_company"
+        style="@style/Detail.Others"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_username"
         tools:text="Google .Inc" />
 
     <TextView
         android:id="@+id/tv_location"
+        style="@style/Detail.Others"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_company"
@@ -49,11 +75,13 @@
 
     <TextView
         android:id="@+id/tv_heading_followers"
+        style="@style/Detail.Item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:text="@string/followers_heading"
+        android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/tv_heading_following"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -62,10 +90,12 @@
 
     <TextView
         android:id="@+id/tv_heading_following"
+        style="@style/Detail.Item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:text="@string/following_heading"
+        android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/tv_heading_repositories"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tv_heading_followers"
@@ -73,11 +103,13 @@
 
     <TextView
         android:id="@+id/tv_heading_repositories"
+        style="@style/Detail.Item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:text="@string/repo_heading"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tv_heading_following"
@@ -85,6 +117,7 @@
 
     <TextView
         android:id="@+id/tv_followers_number"
+        style="@style/Detail.Number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -95,6 +128,7 @@
 
     <TextView
         android:id="@+id/tv_following_number"
+        style="@style/Detail.Number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
@@ -106,6 +140,7 @@
 
     <TextView
         android:id="@+id/tv_repositories_number"
+        style="@style/Detail.Number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -121,21 +156,7 @@
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_following_number">
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/ti_following"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/followers_heading" />
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/ti_followers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/following_heading" />
-
-    </com.google.android.material.tabs.TabLayout>
+        app:layout_constraintTop_toBottomOf="@+id/tv_following_number"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp_connection_list"
