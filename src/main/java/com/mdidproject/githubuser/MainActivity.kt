@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId){
             R.id.search_menu -> {
-                Log.i("Search-Button", "Clicked")
                 val action = FamousUserFragmentDirections.actionFamousUserFragmentToSearchUserFragment()
                 binding.fragmentContainerView.findNavController().navigate(action)
                 true
