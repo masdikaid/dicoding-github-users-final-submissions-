@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Detail">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Detail.Heading">
+        <item name="fontFamily">@font/heading</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+    <style name="Detail.Username">
+        <item name="fontFamily">@font/sub_heading</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="Detail.Others">
+        <item name="fontFamily">@font/heading</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="Detail.Number">
+        <item name="fontFamily">@font/sub_heading</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="Detail.Item">
+        <item name="fontFamily">@font/sub_heading</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+
+    <style name="List">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="List.Heading">
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/heading</item>
+    </style>
+
+</resources>

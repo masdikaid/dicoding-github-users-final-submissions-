@@ -8,4 +8,6 @@
     <string name="followers_heading">Followers</string>
     <string name="following_heading">Following</string>
     <string name="repo_heading">Repositories</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
