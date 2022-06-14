@@ -1,11 +1,9 @@
 package com.mdidproject.githubuser.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.mdidproject.githubuser.R
 import com.mdidproject.githubuser.databinding.UserItemBinding
 import com.mdidproject.githubuser.interfaces.ItemAdapterCallback
 import com.mdidproject.githubuser.response.UserItem

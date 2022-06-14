@@ -46,6 +46,11 @@ class DetailUserFragment : Fragment() {
         binding.vpConnectionList.adapter = pager
 
         viewModel.getUser(args.username)
+        viewModel.isLoading.observe(viewLifecycleOwner) {
+            binding.progressBar.visibility = if (it) View.VISIBLE else View.INVISIBLE
+            binding.vpConnectionList.visibility = if (!it) View.VISIBLE else View.INVISIBLE
+            binding.tlConnection.visibility = if (!it) View.VISIBLE else View.INVISIBLE
+        }
         viewModel.user.observe(viewLifecycleOwner) { data ->
             binding.apply {
                 tvHeadingFollowers.visibility = View.VISIBLE

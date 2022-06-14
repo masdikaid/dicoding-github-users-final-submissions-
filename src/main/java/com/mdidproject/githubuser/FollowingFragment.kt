@@ -1,20 +1,18 @@
 package com.mdidproject.githubuser
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mdidproject.githubuser.adapter.UserListAdapter
-import com.mdidproject.githubuser.databinding.FragmentFollowersBinding
 import com.mdidproject.githubuser.databinding.FragmentFollowingBinding
 import com.mdidproject.githubuser.interfaces.ItemAdapterCallback
 import com.mdidproject.githubuser.response.UserItem
-import com.mdidproject.githubuser.viewmodel.FollowersViewModel
 import com.mdidproject.githubuser.viewmodel.FollowingViewModel
 
 class FollowingFragment(private val username: String) : Fragment() {
@@ -42,6 +40,10 @@ class FollowingFragment(private val username: String) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getFollowing(username)
+        viewModel.isLoading.observe(viewLifecycleOwner) {
+            binding.pbFollowing.visibility = if (it) View.VISIBLE else View.INVISIBLE
+
+        }
         viewModel.following.observe(viewLifecycleOwner) { data ->
             showList(data)
         }

@@ -3,33 +3,25 @@ package com.mdidproject.githubuser
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.google.android.material.tabs.TabLayoutMediator
-import com.mdidproject.githubuser.adapter.ConnectionPageAdapter
 import com.mdidproject.githubuser.adapter.UserListAdapter
-import com.mdidproject.githubuser.databinding.FragmentDetailUserBinding
 import com.mdidproject.githubuser.databinding.FragmentSearchUserBinding
 import com.mdidproject.githubuser.interfaces.ItemAdapterCallback
 import com.mdidproject.githubuser.response.UserItem
-import com.mdidproject.githubuser.viewmodel.DetailUserViewModel
 import com.mdidproject.githubuser.viewmodel.UserSearchViewModel
-import java.util.*
-import kotlin.concurrent.schedule
 
 class SearchUserFragment : Fragment() {
     private var _binding: FragmentSearchUserBinding? = null
     private val binding get() = _binding!!
-    private val args: DetailUserFragmentArgs by navArgs()
     private val viewModel: UserSearchViewModel by viewModels()
     private val userList: MutableList<UserItem> = arrayListOf()
     private lateinit var rvAdapter: UserListAdapter
@@ -64,6 +56,10 @@ class SearchUserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.isLoading.observe(viewLifecycleOwner) {
+            binding.pbSearch.visibility = if (it) View.VISIBLE else View.INVISIBLE
+        }
 
         binding.itSearch.addTextChangedListener(
             object: TextWatcher {
