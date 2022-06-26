@@ -1,4 +1,4 @@
-package com.mdidproject.githubuser.response
+package com.mdidproject.githubuser.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
