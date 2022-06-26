@@ -13,18 +13,19 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mdidproject.githubuser.adapter.UserListAdapter
+import com.mdidproject.githubuser.data.Result
+import com.mdidproject.githubuser.data.local.entity.UserWithFavStatusLiveData
 import com.mdidproject.githubuser.databinding.FragmentSearchUserBinding
 import com.mdidproject.githubuser.interfaces.ItemAdapterCallback
-import com.mdidproject.githubuser.response.UserItem
-import com.mdidproject.githubuser.viewmodel.UserSearchViewModel
+import com.mdidproject.githubuser.viewmodel.UserViewModel
+import com.mdidproject.githubuser.viewmodel.ViewModelFactory
+import java.util.*
 
 class SearchUserFragment : Fragment() {
+    private lateinit var rvAdapter: UserListAdapter
     private var _binding: FragmentSearchUserBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: UserSearchViewModel by viewModels()
-    private val userList: MutableList<UserItem> = arrayListOf()
-    private lateinit var rvAdapter: UserListAdapter
-
+    private val userList = ArrayList<UserWithFavStatusLiveData>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,9 +34,27 @@ class SearchUserFragment : Fragment() {
     ): View {
         _binding = FragmentSearchUserBinding.inflate(inflater, container, false)
         (activity as AppCompatActivity).supportActionBar?.hide()
-        rvAdapter = UserListAdapter(userList)
-        rvAdapter.setAdapterItemCallback(object : ItemAdapterCallback<UserItem> {
-            override fun onItemClicked(view: View?, data: UserItem) {
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+        val viewModel: UserViewModel by viewModels {
+            factory
+        }
+
+        rvAdapter = UserListAdapter(userList, viewLifecycleOwner, viewModel)
+
+        binding.apply {
+            rvSearchUserList.setHasFixedSize(true)
+            rvSearchUserList.layoutManager = LinearLayoutManager(context)
+            rvSearchUserList.adapter = rvAdapter
+        }
+
+        rvAdapter.setAdapterItemCallback(object : ItemAdapterCallback<UserWithFavStatusLiveData>{
+            override fun onItemClicked(view: View?, data: UserWithFavStatusLiveData) {
                 view?.let {
                     val action = SearchUserFragmentDirections.actionSearchUserFragmentToDetailUserActivity(data.username)
                     view.findNavController().navigate(action)
@@ -44,46 +63,49 @@ class SearchUserFragment : Fragment() {
                 }
             }
         })
-        binding.apply {
-            rvSearchUserList.layoutManager = LinearLayoutManager(context)
-            rvSearchUserList.setHasFixedSize(true)
-            rvSearchUserList.adapter = rvAdapter
-        }
 
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        viewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.pbSearch.visibility = if (it) View.VISIBLE else View.INVISIBLE
+        viewModel.resetSearchUser()
+        viewModel.searchRes.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    binding.pbSearch.visibility = View.VISIBLE
+                }
+                is Result.Success -> {
+                    binding.pbSearch.visibility = View.GONE
+                    userList.clear()
+                    userList.addAll(result.data)
+                    rvAdapter.notifyDataSetChanged()
+                }
+                is Result.Error -> {
+                    binding.pbSearch.visibility = View.GONE
+                    Toast.makeText(
+                        context,
+                        "Terjadi kesalahan" + result.error,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
 
         binding.itSearch.addTextChangedListener(
             object: TextWatcher {
+                var timer = Timer()
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
 
                 override fun afterTextChanged(text: Editable?) {
-                    if (!text.isNullOrEmpty()){
-                        viewModel.searchUsers(text.toString())
-                        viewModel.userList.observe(viewLifecycleOwner){
-                            userList.clear()
-                            userList.addAll(it)
-                            rvAdapter.notifyDataSetChanged()
+                    timer.cancel()
+                    timer = Timer()
+                    timer.schedule(object: TimerTask(){
+                        override fun run() {
+                            activity?.runOnUiThread { viewModel.searchUser(text.toString()) }
                         }
-                    }
+                    }, 1500)
                 }
 
             }
         )
-        viewModel.isError.observe(viewLifecycleOwner){
-            if(it){
-                Toast.makeText(activity, "${viewModel.errorMessage}", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     override fun onDestroy() {

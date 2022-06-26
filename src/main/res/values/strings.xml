@@ -11,4 +11,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="share_button">share</string>
+    <string name="favorites_menu">favorites_menu</string>
+    <string name="mode_menu">mode menu</string>
+    <string name="favorites_button">tombol favorite</string>
+    <string name="no_favorites_data">No Favorites User</string>
+    <string name="fav__btn_desc">favorites</string>
 </resources>

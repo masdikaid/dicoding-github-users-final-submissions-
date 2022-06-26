@@ -10,16 +10,17 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mdidproject.githubuser.adapter.UserListAdapter
-import com.mdidproject.githubuser.databinding.FragmentFollowersBinding
+import com.mdidproject.githubuser.data.Result
+import com.mdidproject.githubuser.data.local.entity.UserWithFavStatusLiveData
+import com.mdidproject.githubuser.databinding.FragmentConnectionBinding
 import com.mdidproject.githubuser.interfaces.ItemAdapterCallback
-import com.mdidproject.githubuser.response.UserItem
-import com.mdidproject.githubuser.viewmodel.FollowersViewModel
+import com.mdidproject.githubuser.viewmodel.UserViewModel
+import com.mdidproject.githubuser.viewmodel.ViewModelFactory
 
-class FollowersFragment(private val username: String) : Fragment() {
-    private var _binding: FragmentFollowersBinding? = null
+class FollowersFragment : Fragment() {
+    private var _binding: FragmentConnectionBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: FollowersViewModel by viewModels()
-    private val userList: MutableList<UserItem> = arrayListOf()
+    private val userList = ArrayList<UserWithFavStatusLiveData>()
     private lateinit var rvAdapter: UserListAdapter
 
 
@@ -28,43 +29,60 @@ class FollowersFragment(private val username: String) : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentFollowersBinding.inflate(inflater, container, false)
-        rvAdapter = UserListAdapter(userList)
-        binding.apply {
-            rvUserFollowers.layoutManager = LinearLayoutManager(context)
-            rvUserFollowers.setHasFixedSize(true)
-            rvUserFollowers.adapter = rvAdapter
-        }
+        _binding = FragmentConnectionBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getFollowers(username)
-        viewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.pbFollowers.visibility = if (it) View.VISIBLE else View.INVISIBLE
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+        val viewModel: UserViewModel by viewModels {
+            factory
         }
-        viewModel.followers.observe(viewLifecycleOwner) { data ->
-            showList(data)
-        }
-        viewModel.isError.observe(viewLifecycleOwner){
-            if(it){
-                Toast.makeText(activity, "${viewModel.errorMessage}", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
 
-    private fun showList(users: List<UserItem>){
-        rvAdapter.setAdapterItemCallback(object : ItemAdapterCallback<UserItem> {
-            override fun onItemClicked(view: View?, data: UserItem) {
+        rvAdapter = UserListAdapter(userList, viewLifecycleOwner, viewModel)
+
+        binding.apply {
+            rvUserConnection.setHasFixedSize(true)
+            rvUserConnection.layoutManager = LinearLayoutManager(context)
+            rvUserConnection.adapter = rvAdapter
+        }
+
+        rvAdapter.setAdapterItemCallback(object : ItemAdapterCallback<UserWithFavStatusLiveData>{
+            override fun onItemClicked(view: View?, data: UserWithFavStatusLiveData) {
                 view?.let {
-                    val action = DetailUserFragmentDirections.actionDetailUserFragmentSelf(data.username)
+                    val action = FamousUserFragmentDirections.actionFamousUserFragmentToDetailUserActivity(data.username)
                     view.findNavController().navigate(action)
                 }?: run {
                     Toast.makeText(activity, "failed to open detail ${data.username}", Toast.LENGTH_SHORT).show()
                 }
             }
         })
+
+        val username = arguments?.getString("username") ?: ""
+        viewModel.getFollowers(username).observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    binding.pbConnection.visibility = View.VISIBLE
+                }
+                is Result.Success -> {
+                    binding.pbConnection.visibility = View.GONE
+                    showList(result.data)
+                }
+                is Result.Error -> {
+                    binding.pbConnection.visibility = View.GONE
+                    Toast.makeText(
+                        context,
+                        "Terjadi kesalahan" + result.error,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun showList(users: List<UserWithFavStatusLiveData>){
         userList.clear()
         userList.addAll(users)
         rvAdapter.notifyDataSetChanged()

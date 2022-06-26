@@ -1,24 +1,28 @@
 package com.mdidproject.githubuser
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mdidproject.githubuser.adapter.UserListAdapter
+import com.mdidproject.githubuser.data.Result
+import com.mdidproject.githubuser.data.local.entity.UserWithFavStatusLiveData
 import com.mdidproject.githubuser.databinding.FragmentFamousUserBinding
 import com.mdidproject.githubuser.interfaces.ItemAdapterCallback
-import com.mdidproject.githubuser.response.UserItem
-import com.mdidproject.githubuser.viewmodel.UserListViewModel
+import com.mdidproject.githubuser.viewmodel.UserViewModel
+import com.mdidproject.githubuser.viewmodel.ViewModelFactory
+
 
 class FamousUserFragment : Fragment() {
     private var _binding: FragmentFamousUserBinding? = null
     private val binding get() = _binding!!
+    private val userList = ArrayList<UserWithFavStatusLiveData>()
+    private lateinit var adapter: UserListAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,15 +30,68 @@ class FamousUserFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFamousUserBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(UserListViewModel::class.java)
-        viewModel.userList.observe(viewLifecycleOwner) { data ->
-            showList(data)
+
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+        val viewModel: UserViewModel by viewModels {
+            factory
         }
+
+        adapter = UserListAdapter(userList, viewLifecycleOwner, viewModel)
+
+        binding.apply {
+            rvFamousUserList.setHasFixedSize(true)
+            rvFamousUserList.layoutManager = LinearLayoutManager(context)
+            rvFamousUserList.adapter = adapter
+        }
+
+        adapter.setAdapterItemCallback(object : ItemAdapterCallback<UserWithFavStatusLiveData>{
+            override fun onItemClicked(view: View?, data: UserWithFavStatusLiveData) {
+                view?.let {
+                    val action = FamousUserFragmentDirections.actionFamousUserFragmentToDetailUserActivity(data.username)
+                    view.findNavController().navigate(action)
+                }?: run {
+                    Toast.makeText(activity, "failed to open detail ${data.username}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+
+        viewModel.getFamouseUser().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    binding.pbFamous.visibility = View.VISIBLE
+                }
+                is Result.Success -> {
+                    binding.pbFamous.visibility = View.GONE
+                    showList(result.data)
+                }
+                is Result.Error -> {
+                    binding.pbFamous.visibility = View.GONE
+                    Toast.makeText(
+                        context,
+                        "Terjadi kesalahan" + result.error,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId){
+            R.id.favorites_menu -> {
+                val action = FamousUserFragmentDirections.actionFamousUserFragmentToFavoritesFragment()
+                activity?.findNavController(R.id.fragmentContainerView)?.navigate(action)
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onResume() {
@@ -45,23 +102,10 @@ class FamousUserFragment : Fragment() {
         }
     }
 
-    private fun showList(users: List<UserItem>){
-        val adapter = UserListAdapter(users)
-        adapter.setAdapterItemCallback(object : ItemAdapterCallback<UserItem>{
-            override fun onItemClicked(view: View?, data: UserItem) {
-                view?.let {
-                    val action = FamousUserFragmentDirections.actionFamousUserFragmentToDetailUserActivity(data.username)
-                    view.findNavController().navigate(action)
-                }?: run {
-                    Toast.makeText(activity, "failed to open detail ${data.username}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        })
-        binding.apply {
-            rvFamousUserList.setHasFixedSize(true)
-            rvFamousUserList.layoutManager = LinearLayoutManager(context)
-            rvFamousUserList.adapter = adapter
-        }
+    private fun showList(users: List<UserWithFavStatusLiveData>){
+        userList.clear()
+        userList.addAll(users)
+        adapter.notifyDataSetChanged()
     }
 
     override fun onDestroy() {

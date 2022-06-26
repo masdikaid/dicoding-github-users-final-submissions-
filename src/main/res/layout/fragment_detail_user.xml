@@ -19,9 +19,9 @@
 
     <ImageButton
         android:id="@+id/ib_share"
+        style="@style/Detail.ShareBtn"
         android:layout_width="49dp"
         android:layout_height="49dp"
-        android:backgroundTint="#FFFFFF"
         android:contentDescription="@string/share_button"
         android:src="@drawable/ic_baseline_share_20"
         android:visibility="invisible"
@@ -180,5 +180,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fav_floating_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:clickable="true"
+        android:contentDescription="@string/favorites_button"
+        android:focusable="true"
+        android:src="@drawable/ic_baseline_favorite_fill_20"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
